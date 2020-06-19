@@ -1,0 +1,69 @@
+Sub summary()
+'
+' summary Macro
+'
+
+'
+    Dim wb As Workbook
+    
+    
+    Set wb = ActiveWorkbook
+    c = 51  '# of states
+        
+    wb.Sheets("exhibits").Range("N1").Value = "State"
+    For i = 0 To c - 1
+    wb.Sheets("exhibits").Range("N2").Value = wb.Sheets("lookup").Range("state_start").Offset(i, 0)
+    
+    wb.Sheets("lookup").Range("start").Offset(i, 0).Value = wb.Sheets("exhibits").Range("F36").Value
+    wb.Sheets("lookup").Range("start").Offset(i, 1).Value = wb.Sheets("exhibits").Range("F37").Value
+    wb.Sheets("lookup").Range("start").Offset(i, 2).Value = wb.Sheets("exhibits").Range("F38").Value
+    
+    wb.Sheets("lookup").Range("start").Offset(i, 3).Value = wb.Sheets("exhibits").Range("G36").Value
+    
+    wb.Sheets("lookup").Range("start").Offset(i, 4).Value = wb.Sheets("exhibits").Range("C36").Value
+    wb.Sheets("lookup").Range("start").Offset(i, 5).Value = wb.Sheets("exhibits").Range("C37").Value
+    wb.Sheets("lookup").Range("start").Offset(i, 6).Value = wb.Sheets("exhibits").Range("C38").Value
+    
+    Next i
+    
+    wb.Sheets("exhibits").Range("N1").Value = "All"
+    wb.Sheets("exhibits").Range("N2").Value = "All"
+    
+    MsgBox "Completed."
+End Sub
+
+
+Sub PrintAllStates()
+
+    Dim wb As Workbook
+    Dim ws As Worksheet
+    Set wb = ActiveWorkbook
+    c = 51  '# of states
+        
+    wb.Sheets("exhibits").Range("N1").Value = "State"
+    
+    For i = 0 To c - 1
+    wb.Sheets("exhibits").Range("N2").Value = wb.Sheets("lookup").Range("state_start").Offset(i, 0)
+    Set ws = wb.Sheets.Add(After:=wb.Sheets(wb.Sheets.Count))
+    ws.Name = wb.Sheets("exhibits").Range("N2").Value
+    wb.Sheets("exhibits").Range("A1:L45").Copy
+    With ws.Range("A1:L45")
+        .PasteSpecial Paste:=xlPasteValues, operation:=xlNone, skipBlanks:=False, Transpose:=False
+        .PasteSpecial Paste:=xlPasteFormats, operation:=xlNone, skipBlanks:=False, Transpose:=False
+        .PasteSpecial Paste:=xlPasteColumnWidths, operation:=xlNone, skipBlanks:=False, Transpose:=False
+    End With
+    With ws.PageSetup
+        .PrintArea = "$A$1:$L$45"
+        .Zoom = False
+        .FitToPagesWide = 1
+        .FitToPagesTall = 1
+    End With
+        
+    Next
+    
+    wb.Sheets("exhibits").Range("N1").Value = "All"
+    wb.Sheets("exhibits").Range("N2").Value = "All"
+    
+    MsgBox "Completed."
+    
+End Sub
